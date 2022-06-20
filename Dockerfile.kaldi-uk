@@ -1,0 +1,13 @@
+FROM alphacep/kaldi-vosk-server:latest
+
+ENV MODEL_VERSION v3
+RUN mkdir /opt/vosk-model-uk \
+   && cd /opt/vosk-model-uk \
+   && wget -q https://alphacephei.com/vosk/models/vosk-model-uk-${MODEL_VERSION}.zip \
+   && unzip vosk-model-uk-${MODEL_VERSION}.zip \
+   && mv vosk-model-uk-${MODEL_VERSION} model \
+   && rm -rf vosk-model-uk-${MODEL_VERSION}.zip
+
+EXPOSE 2700
+WORKDIR /opt/vosk-server/websocket
+CMD [ "python3", "./asr_server.py", "/opt/vosk-model-uk/model" ]
